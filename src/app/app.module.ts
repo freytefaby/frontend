@@ -1,3 +1,4 @@
+import { CategoriaService } from './servicio/categoria/categoria.service';
 
 
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,6 +19,8 @@ import { LoginComponent } from './componente/login/login.component';
 //servicios
 import { LoginService } from './servicio/login/login.service';
 import { IpService } from './servicio/ip/ip.service';
+
+
 import { VentasComponent } from './componente/ventas/ventas.component';
 import { CabeceraComponent } from './componente/cabecera/cabecera.component';
 import { MenuComponent } from './componente/menu/menu.component';
@@ -46,7 +49,7 @@ import { CategoriaComponent } from './componente/categoria/categoria.component';
     NgxPaginationModule
    
   ],
-  providers: [appRoutingProviders, LoginService, IpService],
+  providers: [appRoutingProviders, LoginService, IpService, CategoriaService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -11,7 +11,7 @@ export class IpService {
   public servidor()
   {
 
-      return this.ip='http://192.168.1.15/backend/public/api';
+      return this.ip='http://localhost/backend/public/api';
 
   }
 

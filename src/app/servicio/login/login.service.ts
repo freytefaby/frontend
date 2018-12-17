@@ -39,7 +39,6 @@ export class LoginService {
           console.log(data);
           this.token = data['access_token'];
           localStorage.setItem('token', this.token);
-         // window.location.href='/ventas';
           this.router.navigate(['/ventas']);
         }
        

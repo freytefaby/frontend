@@ -21,19 +21,24 @@
                           <i class="icon-plus"></i>&nbsp;Nuevo
                       </button>
                   </div>
+                 
                   <div class="card-body">
+                        <form #FormSearch="ngForm" (ngSubmit)="busqueda(FormSearch)" >
                       <div class="form-group row">
                           <div class="col-md-6">
                               <div class="input-group">
-                                  <select class="form-control col-md-3" id="opcion" name="opcion">
-                                    <option value="nombre">Nombre</option>
-                                    <option value="descripcion">Descripción</option>
+                                  <select class="form-control col-md-3" id="criterio" [(ngModel)]="criterio" name="criterio"  >
+                                    <option value="descripcioncategoria" selected>Nombre</option>
+                                    <option value="descrip">Descripción</option>
                                   </select>
-                                  <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
-                                  <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                  <input type="text" id="texto" name="texto" class="form-control" [(ngModel)]="texto"  placeholder="Texto a buscar">
+                                  <button type="submit" class="btn btn-primary"  ><i class="fa fa-search"></i> Buscar</button>
                               </div>
                           </div>
                       </div>
+                      search: {{search}}<br>
+                      criterio: {{criterio}}
+                      </form>
                       <table class="table table-bordered table-striped table-sm">
                           <thead>
                               <tr >
@@ -45,14 +50,24 @@
                           </thead>
                           <tbody>
                               <tr *ngFor="let categoria of categorias | paginate: { itemsPerPage: itemsPagina, currentPage: p, totalItems: totalpages }">
-                                  <td>
+                                  <td *ngIf="categoria.estado===1">
                                       <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalNuevo" (click)="show(categoria.idcategoria)" >
                                         <i class="icon-pencil"></i>
                                       </button> &nbsp;
-                                      <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminar">
+                                      
+                                      <button  type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminar" (click)="changedidCategory(categoria.idcategoria)">
                                         <i class="icon-trash"></i>
                                       </button>
                                   </td>
+                                  <td *ngIf="categoria.estado===0">
+                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalNuevo" (click)="show(categoria.idcategoria)" >
+                                          <i class="icon-pencil"></i>
+                                        </button> &nbsp;
+                                        
+                                        <button  type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalEliminar" (click)="changedidCategory(categoria.idcategoria)">
+                                          <i class="icon-trash"></i>
+                                        </button>
+                                    </td>
                                   <td>{{categoria.descripcioncategoria}}</td>
                                   <td>{{categoria.descrip}}</td>
                                   
@@ -124,7 +139,7 @@
                       </div>
                       <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                          <button type="button" class="btn btn-danger">Eliminar</button>
+                          <button type="button" class="btn btn-danger" (click)="desactivar(idcategoria)" >Eliminar</button>
                       </div>
                   </div>
                   <!-- /.modal-content -->
