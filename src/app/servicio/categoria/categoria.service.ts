@@ -33,5 +33,19 @@ public nombre:string;
 
  }
 
+ enabledCategory(id:number)
+ {
+  
+  return this._http.put(this._ip.servidor()+'/activar/'+id,{id},{headers:this._ip.headers_get});
+
+ }
+
+ create(nombre:string, descripcion:string)
+ {
+  
+  return this._http.post(this._ip.servidor()+'/crear',{nombre,descripcion},{headers:this._ip.headers_get});
+
+ }
+
 
   }

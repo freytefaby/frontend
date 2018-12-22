@@ -27,10 +27,14 @@ idcategoria:number;
 datos:string='';
 criterio:string='descripcioncategoria';
 search:string='';
-  constructor(public _category: CategoriaService,public _ip: IpService, public router: Router, private _http : HttpClient) { }
+contC:number=0;
+  constructor(public _category: CategoriaService,public _ip: IpService, public router: Router, private _http : HttpClient) {
+   
+   }
 
   ngOnInit() {
     this.getCategory(this.page);
+  
   }
 
   public getCategory(p2)
@@ -74,13 +78,12 @@ show(numero:number)
      
   }
   onSubmit(forma:NgForm,id:number){
-    
    this._category.updateCategory(forma.value['nombre'], forma.value['descripcion'],id).subscribe(
     data => {
       console.log(data);
       if(data==='success')
       {
-        this.getCategory(this.page);
+       this.getCategory(this.page);
         $('#modalNuevo').modal('hide');
 
       }
@@ -140,6 +143,81 @@ show(numero:number)
       }
     )
 
+  }
+
+  activar(id:number)
+  {
+    this._category.enabledCategory(id).subscribe(
+      data=>{
+            console.log(data);
+            $('#modalActivar').modal('hide');
+            this.getCategory(this.page);
+      },
+      error=>
+      {
+            console.log(error)
+
+      }
+    )
+
+  }
+
+  create(create:NgForm)
+  {
+    this.contC=this.contC+1;
+    console.log(this.contC);
+   
+    if(this.contC===1)
+    {
+      this._category.create(create.value['nombre'], create.value['descripcion']).subscribe(
+        data => {
+          console.log(data);
+          if(data==='success')
+          {
+           this.getCategory(this.page);
+            $('#modalCreate').modal('hide');
+            create.reset();
+            this.contC=0;
+           
+          }
+                     
+          },
+            error => {
+              console.log(error);
+                if(error.error.length>0)
+                {
+                  for (var _i = 0; _i < error.error.length; _i++) {
+                      this.datos+=error.error[_i]+'<br>';
+                      }
+                    }
+                    else
+                    {
+                      this.datos=error.error.message+'<br>'+error.statusText;
+                    }
+            swal({
+            title: 'Error',
+            html: this.datos,
+            type: 'error'
+          });
+          this.datos='';
+          this.contC=0;
+             }
+    
+       );
+
+    }
+    else
+    {
+
+      swal({
+        title: 'Error',
+        text: 'Ya hay una peticion en curso',
+        type: 'error'
+      });
+      
+    }
+   
+   
   }
 
 

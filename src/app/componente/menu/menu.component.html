@@ -7,8 +7,8 @@
           <li class="nav-title">
               Mantenimiento
           </li>
-          <li class="nav-item nav-dropdown">
-              <a class="nav-link nav-dropdown-toggle" href="#" ><i class="icon-bag"></i> Almacén</a>
+          <li class="nav-item nav-dropdown" id="almacen">
+              <a class="nav-link nav-dropdown-toggle" href="#" (click)="almacen()" ><i class="icon-bag"  ></i> Almacén</a>
               <ul class="nav-dropdown-items" >
                   <li class="nav-item">
                       <a class="nav-link"   [routerLink]="['/categorias']"><i class="icon-bag"></i> Categorías</a>
