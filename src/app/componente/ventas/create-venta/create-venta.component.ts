@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IpService } from 'src/app/servicio/ip/ip.service';
 import { VentaService } from 'src/app/servicio/venta/venta.service';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-venta',
@@ -19,6 +20,9 @@ nombre_producto:string;
 nombre_laboratorio:string;
 stock:number;
 precioventa:number;
+tipoproducto:number;
+total_cantidad:number;
+idproducto:number;
   constructor(public _venta:VentaService) { }
 
   ngOnInit() {
@@ -73,7 +77,41 @@ buscararticulocod(codigo:NgForm)
       this.nombre_laboratorio=data['nombreproveedor'];
       this.stock=data['stock'];
       this.precioventa=data['preciosugerido'];
-    },error=>{console.log(error)}
+      this.tipoproducto=data['idtipoproducto'];
+      this.idproducto=data['idproducto'];
+
+
+    },error=>{
+      console.log(error);
+      if(error.status===400)
+      {
+        swal({
+          title: 'Error',
+          text: 'Producto no existe, deseas crear uno nuevo?',
+          type: 'error'
+        });
+        this.nombre_laboratorio='';
+        this.stock=0;
+        this.precioventa=0;
+        this.nombre_producto='';
+      }
+      else
+      {
+        swal({
+          title: 'Error',
+          text: 'Error de servidor, estado ' + error.message,
+          type: 'error'
+        });
+      }
+      
+    
+    }
   )
+}
+
+detalle(detalle:NgForm)
+{
+  this.total_cantidad=detalle.value['unidad']+detalle.value['cantidad'];
+  console.log(this.total_cantidad);
 }
 }

@@ -30,20 +30,23 @@
                       <label for="">Impuesto(*)</label>
                       <input type="text" class="form-control">
                   </div>
-                  <div class="col-md-4">
-                      <div class="form-group">
-                          <label>Tipo venta(*)</label>
-                          <select class="form-control" >
-                              <option value="0">Seleccione</option>
-                              <option *ngFor="let tipo of tipoventarray" value="tipo.idtipoventa">{{tipo.desctipoventa}}</option>
-                        </select>
-                      </div>
-                  </div>
+                  
                   
               </div>
               <div class="form-group row border">
+                 
+                    <form #producod="ngForm" autocomplete="off" role="form" class="form-inline" >
+                            <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Tipo venta(*): </label><br>
+                                        <select class="form-control" id="tipo" name="tipo"  [(ngModel)]="tipo" >
+                                            <option value="0">Seleccione</option>
+                                            <option *ngFor="let tipo of tipoventarray" value="{{tipo.idtipoventa}}">{{tipo.desctipoventa}}</option>
+                                      </select>
+                                    </div>
+                                </div>
                   <div class="col-md-6">
-                      <form #producod="ngForm" autocomplete="off" >
+                     
                       <div class="form-group">
                           <label>Artículo <span style="color:red;" >(*Seleccione)</span></label>
                           <div class="form-inline">
@@ -56,32 +59,44 @@
                           Laboratorio:{{nombre_laboratorio}}<br>
                              Existencia: {{stock}}                                   
                       </div>
-                      </form>
+                     
                   </div>
+                 
                   <div class="col-md-2">
                       <div class="form-group">
-                          <label>Precio venta por unidad </label><br>
-                          {{precioventa|currency: 'COP ':'code'}}
-                      </div>
+                            
+                          
+                                Valor P/U: <br>
+                         <strong>{{precioventa|currency: 'COP ':'code'}}</strong>
+                      
+                    </div>
                   </div>
                   <div class="col-md-1">
                       <div class="form-group">
+                            <div class="form-inline">
                           <label>Cantidad</label>
-                          <input type="number" value="0" min="0"  class="form-control" >
+                          
+                          <input type="number" value="0"   class="form-control" *ngIf="tipoproducto===2" id="cantidad" name="cantidad" [(ngModel)]="cantidad" style="width:50px">
+                          <input type="number" value="0"   class="form-control" *ngIf="tipoproducto===1"  style="width:50px" id="cantidad" name="cantidad" [(ngModel)]="cantidad" >
                       </div>
+                        </div>
                   </div>
                   <div class="col-md-1">
                       <div class="form-group">
+                          <div class="form-inline">
                           <label>Unidad</label>
-                          <input type="number" value="0" min="0" class="form-control" >
+                          <input type="number" value="0" class="form-control" [(ngModel)]="unidad" id="unidad" name="unidad" style="width:50px"  >
+                          </div>
                       </div>
-                  </div>
+                  </div><br>
                   <div class="col-md-2">
                       <div class="form-group">
-                          <label>Agregar </label>
-                          <button  class="btn btn-success form-control btnagregar"><i class="icon-plus"></i></button>
+                            <div class="form-inline">
+                          <button type="button"  class="btn btn-success form-control btnagregar"  (click)="detalle(producod)" style="margin-top:18px; width:150px"><i class="icon-plus"></i></button>
+                          </div>
                       </div>
                   </div>
+                </form>
               </div>
               <div class="form-group row border">
                   <div class="table-responsive col-md-12">
