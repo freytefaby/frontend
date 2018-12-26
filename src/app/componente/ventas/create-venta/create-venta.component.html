@@ -28,7 +28,7 @@
                  
                   <div class="col-md-3">
                       <label for="">Impuesto(*)</label>
-                      <input type="text" class="form-control">
+                      <input type="text" class="form-control" value="{{impuesto}}%">
                   </div>
                   
                   
@@ -40,11 +40,11 @@
                                     <div class="form-group">
                                         <label>Tipo venta(*): </label><br>
                                         <select class="form-control" id="tipo" name="tipo"  [(ngModel)]="tipo" >
-                                            <option value="0">Seleccione</option>
+                                            <option value="0" selected>Seleccione</option>
                                             <option *ngFor="let tipo of tipoventarray" value="{{tipo.idtipoventa}}">{{tipo.desctipoventa}}</option>
                                       </select>
                                     </div>
-                                </div>
+                                </div><br><br><br>
                   <div class="col-md-6">
                      
                       <div class="form-group">
@@ -76,8 +76,8 @@
                             <div class="form-inline">
                           <label>Cantidad</label>
                           
-                          <input type="number" value="0"   class="form-control" *ngIf="tipoproducto===2" id="cantidad" name="cantidad" [(ngModel)]="cantidad" style="width:50px">
-                          <input type="number" value="0"   class="form-control" *ngIf="tipoproducto===1"  style="width:50px" id="cantidad" name="cantidad" [(ngModel)]="cantidad" >
+                          <input type="number" value="0"   class="form-control" *ngIf="tipo===2" id="cantidad" name="cantidad" [(ngModel)]="cantidad" style="width:70px">
+                          <input type="number" value="0"   class="form-control" *ngIf="tipo===1" disabled style="width:70px" id="cantidad" name="cantidad" [(ngModel)]="cantidad" >
                       </div>
                         </div>
                   </div>
@@ -85,7 +85,7 @@
                       <div class="form-group">
                           <div class="form-inline">
                           <label>Unidad</label>
-                          <input type="number" value="0" class="form-control" [(ngModel)]="unidad" id="unidad" name="unidad" style="width:50px"  >
+                          <input type="number" value="0" class="form-control" [(ngModel)]="unidad" id="unidad" name="unidad" style="width:70px"  >
                           </div>
                       </div>
                   </div><br>
@@ -100,57 +100,52 @@
               </div>
               <div class="form-group row border">
                   <div class="table-responsive col-md-12">
-                      <table class="table table-bordered table-striped table-sm">
+                      <table class="table table-bordered table-striped table-sm table-condensed">
                           <thead>
                               <tr>
                                   <th>Opciones</th>
                                   <th>Artículo</th>
                                   <th>Precio</th>
                                   <th>Cantidad</th>
-                                  <th>Descuento</th>
                                   <th>Subtotal</th>
+                                  
                               </tr>
                           </thead>
-                          <tbody >
-                              <tr >
+                          <tbody *ngIf="detalles.length>0" >
+                              <tr  *ngFor="let detail of detalles; index as i"  >
                                   <td>
-                                    <br>
-                                      <button  type="button" class="btn btn-danger btn-sm">
-                                          <i class="icon-close"></i>
+                                     <button  type="button" class="btn btn-danger btn-sm" style="margin-top:0" (click)="delete_product(i,detail.subtotal,detail.venta-detail.subtotal,detail.venta)">
+                                          <i class="icon-close" ></i>
                                       </button>
                                   </td>
+                                
                                   <td >
+                                      {{detail.producto|lowercase}}
                                   </td>
                                   <td>
-                                      <span style="color:red;" >price: </span>
-                                      <input v-model="detalle.precio" type="number" class="form-control">
-                                  </td>
+                                       {{detail.venta|currency: 'COP ':'code'}}
                                   <td>
-                                      <span style="color:red;" >Stock: </span>
-                                      <input v-model="detalle.cantidad" type="number" class="form-control">
+                                      {{detail.cantidad}}
                                   </td>
+                                  
                                   <td>
-                                      <span style="color:red;" >Descuento superior</span>
-                                      <input  type="number" class="form-control">
-                                  </td>
-                                  <td>
-                                     
+                                        {{detail.subtotal|currency: 'COP ':'code'}}
                                   </td>
                               </tr>
                               <tr style="background-color: #CEECF5;">
-                                  <td colspan="5" align="right"><strong>Total Parcial:</strong></td>
-                                  <td>$ </td>
+                                  <td colspan="5" align="right"><strong>Total Parcial: {{totalV|currency:'COP ':'code'}}</strong></td>
+                                  
                               </tr>
                               <tr style="background-color: #CEECF5;">
-                                  <td colspan="5" align="right"><strong>Total Impuesto:</strong></td>
-                                  <td>$ </td>
+                                  <td colspan="5" align="right"><strong>Total Impuesto: {{impuestoV|currency:'COP ':'code'}}</strong></td>
+                                 
                               </tr>
                               <tr style="background-color: #CEECF5;">
-                                  <td colspan="5" align="right"><strong>Total Neto:</strong></td>
-                                  <td>$</td>
+                                  <td colspan="5" align="right"><strong>Total Neto:  {{netoV|currency:'COP ':'code'}}</strong></td>
+                                 
                               </tr>
                           </tbody>
-                          <tbody v-else>
+                          <tbody *ngIf="detalles.length<1">
                               <tr>
                                   <td colspan="6">
                                       NO hay artículos agregados
@@ -160,12 +155,32 @@
                       </table>
                   </div>
               </div>
+              <form #vent="ngForm"  role="form"  >
               <div class="form-group row">
-                  <div class="col-md-12">
-                      <button type="button"class="btn btn-secondary">Cerrar</button>
-                      <button type="button" class="btn btn-primary" >Registrar Venta</button>
+                   
+                  <div class="row">
+                        <div class="col-md-6">
+                                <label>Valor en Descuentos: </label>
+                                <input type="number" class="form-control" id="descuento" name="descuento" [(ngModel)]="descuento" >
+                              
+                               
+                            </div>
+
+                            <div class="col-md-6">
+                                    
+                                    <label>Importe Venta: </label>
+                                    <input type="number" id="venta" name="venta" [(ngModel)]="venta" class="form-control"><br>
+                                   
+                                </div>
+
                   </div>
+                  <div class="col-md-12">
+                        <button type="button"class="btn btn-secondary">Cerrar</button> || 
+                        <button type="button" class="btn btn-primary" (click)="realizar_venta(vent)" >Registrar Venta</button>
+                 </div>
+                 
               </div>
+              </form>
           </div>
 
 

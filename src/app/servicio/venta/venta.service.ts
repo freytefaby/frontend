@@ -30,5 +30,12 @@ export class VentaService {
   return this._http.get(this._ip.servidor()+'/product_cod/'+codigobarra,{headers:this._ip.headers_get});
 
  }
+
+ crear(data:Array<any>)
+ {
+  
+  return this._http.post(this._ip.servidor()+'/crearventa',{data},{headers:this._ip.headers_get});
+
+ }
 }
 
