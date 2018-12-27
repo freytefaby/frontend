@@ -4,6 +4,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IpService } from 'src/app/servicio/ip/ip.service';
 import { VentaService } from 'src/app/servicio/venta/venta.service';
 import swal from 'sweetalert2';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-venta',
@@ -14,6 +16,7 @@ export class CreateVentaComponent implements OnInit {
 nombre_cliente:string='';
 id_cliente:number=0;
 tipoventarray:any;
+contador:number=0;
 
 //datos de los productos que vienen en la base de datos
 nombre_producto:string='';
@@ -47,10 +50,11 @@ descuento:number=0;
 
 //inputs model
 tipo:number=0;
+tipov:number=0;
 cantidad:number=0;
 unidad:number=0;
 
-  constructor(public _venta:VentaService) { }
+  constructor(public _venta:VentaService,public router: Router) { }
 
   ngOnInit() {
     this.tipoventa();
@@ -269,22 +273,86 @@ realizar_venta(venta:NgForm)
       type: 'error'
     });
    }
+   else if(this.importe < this.netoV )
+   {
+    swal({
+      title:'Error',
+      text: 'El importe debe ser mayor a la venta al menos que estes cubriendo un descuento',
+      type: 'error'
+    });
+    
+    
+   }
+   else if(this.id_cliente===0)
+   {
+    swal({
+      title:'Error',
+      text: 'Debes escoger un cliente valido',
+      type: 'error'
+    });
+
+   }
+   else if(this.tipov===0)
+   {
+    swal({
+      title:'Error',
+      text: 'Debes escoger el tipo de venta',
+      type: 'error'
+    });
+
+   }
    else
    {
+     this.contador=this.contador+1;
+     if(this.contador===1)
+     {
+      this._venta.crear(this.detalles,this.netoV,this.id_cliente,this.totalV,this.comisionesV,this.utilidadesV,this.importe,this.tipov,this.descuento).subscribe(
+        data=>
+        {
+          console.log(data);
+          var res=this.importe-this.netoV;
+          var cadena='<h3>Dato registrado exitosamente</h3><h4>No.factura: '+data['factura']+'<br>Cambio: COP'+' '+res+'</h4>';
+          swal({
+            title: 'Exito!!',
+            html: cadena,
+            type: 'success'
+          });
+          this.router.navigate(['/ventas']);
+      
+        },
+        error=>
+        {
+      
+          console.log(error);
+          swal({
+            title:'Error',
+            text: 'No se pudo procesar la solicitud, consulte con el administrador',
+            type: 'error'
+          });
+        })
+
+     }
+     else
+     { 
+       swal({
+      title:'Error',
+      text: 'Ya hay una solicitud en curso',
+      type: 'error'
+    });
+       
+     }
     
-    this._venta.crear(this.detalles,this.netoV,this.id_cliente,this.totalV,this.comisionesV,this.utilidadesV,this.importe,this.tipo,this.descuento).subscribe(
-      data=>
-      {
-        console.log(data);
-    
-      },
-      error=>
-      {
-    
-        console.log(error);
-      })
+
+
    }
    
+
+}
+
+busquedacliente(cliente:NgForm)
+{
+      alert("probemos");
+
 
 }
 }
