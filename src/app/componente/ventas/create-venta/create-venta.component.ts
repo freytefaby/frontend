@@ -16,7 +16,7 @@ id_cliente:number=0;
 tipoventarray:any;
 
 //datos de los productos que vienen en la base de datos
-nombre_producto:string;
+nombre_producto:string='';
 nombre_laboratorio:string;
 stock:number;
 precioventa:number;
@@ -40,6 +40,10 @@ detalles: Array<any>=[];
 totalV:number=0;
 impuestoV:number=0;
 netoV:number=0;
+comisionesV:number=0;
+utilidadesV:number=0;
+importe:number=0;
+descuento:number=0;
 
 //inputs model
 tipo:number=0;
@@ -176,7 +180,17 @@ detalle(detalle:NgForm)
     });
 
   }
-  else
+  else if(this.nombre_producto==='')
+    {
+      swal({
+        title: 'Error',
+        text: 'Producto mal calculado',
+        type: 'error'
+      });
+      
+
+    }
+    else
     {
       this.valorcompra=this.total_cantidad*this.preciocompra/this.cantidadempaque;
       this.precio=this.total_cantidad*this.precioventa/this.cantidadempaque;
@@ -186,11 +200,15 @@ detalle(detalle:NgForm)
        this.totalV=this.totalV+this.precio;
        this.impuestoV=this.impuestoV+this.iva;
        this.netoV=this.netoV+this.precio+this.iva;
+       this.comisionesV=this.comisionesV+this.ganancia_vendedor;
+       this.utilidadesV=this.utilidadesV+this.utilidades;
       this.detalles.push({'producto':this.nombre_producto,
       'id':this.idproducto,
       'venta':this.precio+this.iva,
       'cantidad':this.total_cantidad,
-      'subtotal':this.precio});
+      'subtotal':this.precio,
+      'utilidad':this.utilidades,
+      'comision':this.ganancia_vendedor});
       // console.log("cantidad: "+this.total_cantidad);
       // console.log("Valor: "+this.precio);
       // console.log("Valor de impuesto: "+this.iva);
@@ -233,19 +251,40 @@ comprobar_repetido(datos:number)
 
 realizar_venta(venta:NgForm)
 {
-
-alert(venta.value['venta']);
-this._venta.crear(this.detalles).subscribe(
-  data=>
-  {
-    console.log(data);
-
-  },
-  error=>
-  {
-
-    console.log(error);
-  })
+  this.importe=venta.value['importe'];
+  this.descuento=venta.value['descuento'];
+   if(this.detalles.length<=0)
+   {
+    swal({
+      title: 'Error',
+      text: 'No hay productos en la venta!!',
+      type: 'error'
+    });
+   }
+   else if(this.importe <=0 )
+   {
+    swal({
+      title: 'Error',
+      text: 'Error de calculo!!',
+      type: 'error'
+    });
+   }
+   else
+   {
+    
+    this._venta.crear(this.detalles,this.netoV,this.id_cliente,this.totalV,this.comisionesV,this.utilidadesV,this.importe,this.tipo,this.descuento).subscribe(
+      data=>
+      {
+        console.log(data);
+    
+      },
+      error=>
+      {
+    
+        console.log(error);
+      })
+   }
+   
 
 }
 }

@@ -31,10 +31,19 @@ export class VentaService {
 
  }
 
- crear(data:Array<any>)
+ crear(data:Array<any>,total:number,cliente:number,subtotal:number,comisiones:number,utilidades:number,importe:number,tipo:number,descuento:number)
  {
   
-  return this._http.post(this._ip.servidor()+'/crearventa',{data},{headers:this._ip.headers_get});
+  return this._http.post(this._ip.servidor()+'/crearventa',{data
+    ,total
+    ,cliente
+    ,subtotal
+    ,comisiones
+    ,utilidades
+    ,importe
+    ,tipo
+    ,descuento
+  },{headers:this._ip.headers_get});
 
  }
 }
