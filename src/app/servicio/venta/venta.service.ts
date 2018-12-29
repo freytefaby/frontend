@@ -31,6 +31,13 @@ export class VentaService {
 
  }
 
+ buscarcliente(criterio:string,busqueda:string)
+ {
+  
+  return this._http.get(this._ip.servidor()+'/buscarcliente?criterio='+criterio+"&buscar="+busqueda,{headers:this._ip.headers_get});
+
+ }
+
  crear(data:Array<any>,total:number,cliente:number,subtotal:number,comisiones:number,utilidades:number,importe:number,tipo:number,descuento:number)
  {
   
@@ -45,6 +52,17 @@ export class VentaService {
     ,descuento
   },{headers:this._ip.headers_get});
 
+ }
+
+ crear_cliente(nombre:string,apellido:string,direccion:string,telefono:string,cedula:string,correo:string)
+ {
+  return this._http.post(this._ip.servidor()+'/crearcliente',{nombre,apellido,direccion,telefono,cedula,correo},{headers:this._ip.headers_get});  
+
+ }
+
+ buscarproductomodal(criterio:string,busqueda:string)
+ {
+  return this._http.get(this._ip.servidor()+'/buscarproducto?criterio='+criterio+"&buscar="+busqueda,{headers:this._ip.headers_get});
  }
 }
 

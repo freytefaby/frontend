@@ -6,7 +6,8 @@ import { VentaService } from 'src/app/servicio/venta/venta.service';
 import swal from 'sweetalert2';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Router } from '@angular/router';
-
+import { TouchSequence } from 'selenium-webdriver';
+declare var $: any;
 @Component({
   selector: 'app-create-venta',
   templateUrl: './create-venta.component.html',
@@ -53,6 +54,11 @@ tipo:number=0;
 tipov:number=0;
 cantidad:number=0;
 unidad:number=0;
+selectecliente:string='nombrecliente';
+
+//DATOS DE BUSQUEDA DE CLIENTE MODAL
+datoscliente:any;
+
 
   constructor(public _venta:VentaService,public router: Router) { }
 
@@ -351,8 +357,131 @@ realizar_venta(venta:NgForm)
 
 busquedacliente(cliente:NgForm)
 {
-      alert("probemos");
+    console.log(cliente.value);
+    this._venta.buscarcliente(cliente.value['selectecliente'],cliente.value['namecliente']).subscribe(
+     data=>{
+    
+      this.datoscliente=data['data'];
+      console.log(this.datoscliente);
+     
+
+     },error=>{
+      console.log(error);
+
+     }
+
+    )
+}
+buscarclientemodal(id:number)
+{
+  this._venta.buscarclientecc(id).subscribe(
+    data=>{
+
+        console.log(data)
+        this.nombre_cliente=data['nombrecliente']+' '+data['apellidocliente'];
+        this.id_cliente=data['idcliente'];
+        $('#modalClient').modal('hide');
+
+       
+
+    },
+    error=>
+    {
+        console.log(error)
+        this.nombre_cliente='No se encuentra'
+    }
+
+  );
+}
+agregar_cliente(cliente:NgForm)
+{
+ var contC=0;
+ var datos='';
+contC=contC+1;
+if(contC===1)
+{this._venta.crear_cliente(cliente.value['nombremc'],cliente.value['apellidomc'],cliente.value['direccionmc'],cliente.value['telefonomc'],cliente.value['cedulamc'],cliente.value['correomc']).subscribe(
+  data=>{
+    if(data['respuesta']==='ok')
+    {
+      this._venta.buscarclientecc(data['idcliente']).subscribe(
+        data2=>{
+  
+            console.log(data)
+            this.nombre_cliente=data2['nombrecliente']+' '+data2['apellidocliente'];
+            this.id_cliente=data['idcliente'];
+           
+  
+        },
+        error2=>
+        {
+            console.log(error2);
+            this.nombre_cliente='No se encuentra';
+        }
+  
+      );
+      console.log(data);
+      cliente.reset();
+
+      $('#crearcliente').modal('hide');
+
+      contC=0;
+
+    }
+    
+  
+  },
+  error=>{
+    console.log(error);
+    if(error.error.length>0)
+    {
+      for (var _i = 0; _i < error.error.length; _i++) {
+          datos+=error.error[_i]+'<br>';
+          }
+        }
+        else
+        {
+          datos=error.error.message+'<br>'+error.statusText;
+        }
+swal({
+title: 'Error',
+html: datos,
+type: 'error'
+});
+    datos='';
+    contC=0;
+  }
+    
+  )
+
+}
+else
+{
+  swal({
+    title: 'Error',
+    text: 'Ya hay una peticion en curso',
+    type: 'error'
+  });
+
+}
+
+
+}
+
+
+buscarproductomodal(datos:NgForm)
+{
+ console.log(datos.value);
+ this._venta.buscarproductomodal(datos.value['selecteproducto'],datos.value['namecliente']).subscribe(
+   data=>{
+          console.log(data);
+   },
+   error=>
+   {
+      console.log(error);
+   }
+ )
 
 
 }
 }
+

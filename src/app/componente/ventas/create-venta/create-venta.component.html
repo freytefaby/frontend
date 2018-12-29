@@ -20,7 +20,7 @@
                               <button style="display:none" class="btn btn-primary" (click)="buscarcliente(formcliente)">Buscar2 </button>
                               <input type="text" readonly class="form-control" value='{{nombre_cliente}}' >
                               <button  class="btn btn-primary" data-toggle="modal" data-target="#modalClient"><i class="fa fa-search" aria-hidden="true" ></i></button>
-                              <button  class="btn btn-success"><i class="fa fa-plus" aria-hidden="true"></i></button>
+                              <button  class="btn btn-success" data-toggle="modal" data-target="#crearcliente"><i class="fa fa-plus" aria-hidden="true" ></i></button>
                          
                       </div>
                       </form>
@@ -52,7 +52,7 @@
                           <div class="form-inline">
                               <input type="text" class="form-control"  placeholder="Ingrese artículo" id="codigo" name="codigo"  [(ngModel)]="codigo" >
                               <button style="display:none" (click)="buscararticulocod(producod)"></button>
-                              <button  class="btn btn-primary"  >...</button>
+                              <button  class="btn btn-primary" data-toggle="modal" data-target="#buscarProductoModal"  >...</button>
                               <input type="text" readonly class="form-control" value="{{nombre_producto}}">
                              
                           </div> 
@@ -85,7 +85,7 @@
                       <div class="form-group">
                           <div class="form-inline">
                           <label>Unidad</label>
-                          <input type="number" value="0" class="form-control" [(ngModel)]="unidad" id="unidad" name="unidad" style="width:70px"  >
+                          <input type="number" value="0" class="form-control" [(ngModel)]="unidad" id="unidad" name="unidad"  style="width:70px"  >
                           </div>
                       </div>
                   </div><br>
@@ -205,11 +205,13 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <div class="input-group">
-                                <select class="form-control col-md-3" id="opcion" name="opcion">
-                                  <option value="nombre">Nombre</option>
-                                  <option value="descripcion">Descripción</option>
+                                <select class="form-control col-md-3" id="selectecliente" name="selectecliente" [(ngModel)]="selectecliente">
+                                  <option value="nombrecliente">Nombre</option>
+                                  <option value="apellidocliente">Apellido</option>
+                                  <option value="telefonocliente">Telefono</option>
+                                  <option value="cedulacliente">Cedula</option>
                                 </select>
-                                <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
+                                <input type="text" id="namecliente" name="namecliente" [(ngModel)]="namecliente" class="form-control" placeholder="Texto a buscar">
                                 <button type="submit" class="btn btn-primary" (click)="busquedacliente(formClient)"><i class="fa fa-search"></i> Buscar</button>
                             </div>
                         </div>
@@ -222,25 +224,25 @@
                                 <th>Apellido</th>
                                 <th>Direccion</th>
                                 <th>Telefono</th>
+                                <th>Correo</th>
                                 <th>Cedula</th>
                     
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr *ngFor="let client of datoscliente"  >
                                 <td>
-                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalNuevo">
-                                      <i class="icon-pencil"></i>
-                                    </button> &nbsp;
-                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminar">
-                                      <i class="icon-trash"></i>
-                                    </button>
+                                    <button type="button" class="btn btn-success btn-sm" (click)="buscarclientemodal(client.cedulacliente)" >
+                                      <i class="icon-check"></i>
+                                    </button> 
+                                  
                                 </td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>                                
+                                <td>{{client.nombrecliente}}</td>
+                                <td>{{client.apellidocliente}}</td>
+                                <td>{{client.direccioncliente}}</td>
+                                <td>{{client.telefonocliente}}</td>
+                                <td>{{client.correocliente}}</td>
+                                <td>{{client.cedulacliente}}</td>                                
                         
                             </tr>
                         </tbody>
@@ -256,6 +258,124 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+    <div class="modal fade" id="crearcliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-success modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Agregar clientes</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form #formCreateClient="ngForm" >
+                    <div class="modal-body">
+                            <div class="form-group">
+                                    <label for="email">Nombre:</label>
+                                    <input type="text" class="form-control" id="nombremc" name="nombremc" [(ngModel)]="nombremc" placeholder="Nombre">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="pwd">Apellido:</label>
+                                    <input type="text" class="form-control" id="apellidomc" name="apellidomc" [(ngModel)]="apellidomc" placeholder="Apellido">
+                                  </div>
+                                  <div class="form-group">
+                                        <label for="pwd">Dirección:</label>
+                                        <input type="text" class="form-control" id="direccionmc" name="direccionmc" [(ngModel)]="direccionmc" placeholder="Dirección">
+                                      </div>
+                                      <div class="form-group">
+                                            <label for="pwd">Telefono:</label>
+                                            <input type="text" class="form-control" id="telefonomc" name="telefonomc" [(ngModel)]="telefonomc" placeholder="Telefono">
+                                          </div>
+
+                                          <div class="form-group">
+                                                <label for="pwd">Cedula:</label>
+                                                <input type="text" class="form-control" id="cedulamc" name="cedulamc" [(ngModel)]="cedulamc" placeholder="Cedula">
+                                              </div>
+
+                                              <div class="form-group">
+                                                    <label for="pwd">Correo:</label>
+                                                    <input type="email" class="form-control" id="correomc" name="correomc" [(ngModel)]="correomc" placeholder="Correo">
+                                                  </div>
+                                  
+                                  <button type="submit" class="btn btn-success" (click)="agregar_cliente(formCreateClient)">Agregar</button>
+                       
+                           
+                        
+                    </div>
+                  
+                </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        
+    </div>
+    <div class="modal fade" id="buscarProductoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-primary modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Productos</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form #formProduct="ngForm" >
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <select class="form-control col-md-3" id="selectecliente" name="selecteproducto" [(ngModel)]="selectecliente">
+                                      <option value="descripcionproducto">Nombre producto</option>
+                                      <option value="apellidocliente">Apellido</option>
+                                      <option value="telefonocliente">Telefono</option>
+                                      <option value="cedulacliente">Cedula</option>
+                                    </select>
+                                    <input type="text" id="nameproducto" name="namecliente" [(ngModel)]="namecliente" class="form-control" placeholder="Texto a buscar">
+                                    <button type="submit" class="btn btn-primary" (click)="buscarproductomodal(formProduct)"><i class="fa fa-search"></i> Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Opciones</th>
+                                    <th>Nombre</th>
+                                    <th>Producto</th>
+                                    <th>Laboratorio</th>
+                                    <th>Codigo de barras</th>
+                                    <th>Stock</th>
+                                   
+                        
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let client of datoscliente"  >
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-sm" (click)="buscarclientemodal(client.cedulacliente)" >
+                                          <i class="icon-check"></i>
+                                        </button> 
+                                      
+                                    </td>
+                                    <td>{{client.nombrecliente}}</td>
+                                    <td>{{client.apellidocliente}}</td>
+                                    <td>{{client.direccioncliente}}</td>
+                                    <td>{{client.telefonocliente}}</td>
+                                    <td>{{client.correocliente}}</td>
+                                    <td>{{client.cedulacliente}}</td>                                
+                            
+                                </tr>
+                            </tbody>
+                        </table>
+                           
+                           
+                        
+                    </div>
+                  
+                </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
 
     <footer class="app-footer">
         <span><a href="http://www.incanatoit.com/">IncanatoIT</a> &copy; 2017</span>
