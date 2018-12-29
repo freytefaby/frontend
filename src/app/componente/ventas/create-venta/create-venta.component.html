@@ -323,13 +323,10 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                                 <div class="input-group">
-                                    <select class="form-control col-md-3" id="selectecliente" name="selecteproducto" [(ngModel)]="selectecliente">
+                                    <select class="form-control col-md-3" id="selectecliente" name="selecteproducto" [(ngModel)]="selectproducto">
                                       <option value="descripcionproducto">Nombre producto</option>
-                                      <option value="apellidocliente">Apellido</option>
-                                      <option value="telefonocliente">Telefono</option>
-                                      <option value="cedulacliente">Cedula</option>
                                     </select>
-                                    <input type="text" id="nameproducto" name="namecliente" [(ngModel)]="namecliente" class="form-control" placeholder="Texto a buscar">
+                                    <input type="text" id="nameproducto" name="nameproducto" [(ngModel)]="nameproducto" class="form-control" placeholder="Texto a buscar">
                                     <button type="submit" class="btn btn-primary" (click)="buscarproductomodal(formProduct)"><i class="fa fa-search"></i> Buscar</button>
                                 </div>
                             </div>
@@ -339,28 +336,28 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Nombre</th>
-                                    <th>Producto</th>
                                     <th>Laboratorio</th>
-                                    <th>Codigo de barras</th>
+                                    <th>Codigo</th>
                                     <th>Stock</th>
+                                    <th>Precio</th>
                                    
                         
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let client of datoscliente"  >
+                                <tr  *ngFor="let pro of productosModal"  >
                                     <td>
-                                        <button type="button" class="btn btn-success btn-sm" (click)="buscarclientemodal(client.cedulacliente)" >
+                                        <button type="button" class="btn btn-success btn-sm" (click)="buscarproductocodmod(pro.codigobarra1)" >
                                           <i class="icon-check"></i>
                                         </button> 
                                       
                                     </td>
-                                    <td>{{client.nombrecliente}}</td>
-                                    <td>{{client.apellidocliente}}</td>
-                                    <td>{{client.direccioncliente}}</td>
-                                    <td>{{client.telefonocliente}}</td>
-                                    <td>{{client.correocliente}}</td>
-                                    <td>{{client.cedulacliente}}</td>                                
+                                    <td>{{pro.descripcionproducto}}</td>
+                                    <td>{{pro.nombreproveedor}}</td>
+                                    <td>{{pro.codigobarra1}}</td>
+                                    <td>{{pro.stock}}</td>
+                                    <td>{{pro.preciosugerido|currency:'COP ':'code'}}</td>
+                                                                
                             
                                 </tr>
                             </tbody>

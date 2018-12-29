@@ -55,9 +55,13 @@ tipov:number=0;
 cantidad:number=0;
 unidad:number=0;
 selectecliente:string='nombrecliente';
+selectproducto:string='descripcionproducto';
 
 //DATOS DE BUSQUEDA DE CLIENTE MODAL
 datoscliente:any;
+
+//datos de busqueda productos modal
+productosModal:any;
 
 
   constructor(public _venta:VentaService,public router: Router) { }
@@ -219,6 +223,18 @@ detalle(detalle:NgForm)
       'subtotal':this.precio,
       'utilidad':this.utilidades,
       'comision':this.ganancia_vendedor});
+      this.nombre_producto='';
+      this.nombre_laboratorio='';
+      this.stock=0;
+      this.precioventa=0;
+      this.tipo=0;
+      this.idproducto=0;
+      this.cantidadempaque=0;
+      this.impuesto=0;
+      this.comision=0;
+      this.preciocompra=0;
+
+      detalle.reset();
       // console.log("cantidad: "+this.total_cantidad);
       // console.log("Valor: "+this.precio);
       // console.log("Valor de impuesto: "+this.iva);
@@ -471,9 +487,11 @@ else
 buscarproductomodal(datos:NgForm)
 {
  console.log(datos.value);
- this._venta.buscarproductomodal(datos.value['selecteproducto'],datos.value['namecliente']).subscribe(
+ this._venta.buscarproductomodal(datos.value['selecteproducto'],datos.value['nameproducto']).subscribe(
    data=>{
-          console.log(data);
+       
+          this.productosModal=data['data'];
+          console.log(this.productosModal);
    },
    error=>
    {
@@ -483,5 +501,53 @@ buscarproductomodal(datos:NgForm)
 
 
 }
+
+buscarproductocodmod(data:any)
+{
+
+ this._venta.buscarproducto(data).subscribe(
+   data=>{
+        console.log(data);
+        this.nombre_producto=data['descripcionproducto'];
+      this.nombre_laboratorio=data['nombreproveedor'];
+      this.stock=data['stock'];
+      this.precioventa=data['preciosugerido'];
+      this.tipo=data['idtipoproducto'];
+      this.idproducto=data['idproducto'];
+      this.cantidadempaque=data['cantidadempaque'];
+      this.impuesto=data['valoriva'];
+      this.comision=data['comision'];
+      this.preciocompra=data['preciocompra'];
+      $('#buscarProductoModal').modal('hide');
+   },
+   error=>{
+
+    console.log(error);
+    if(error.status===400)
+    {
+      swal({
+        title: 'Error',
+        text: 'Producto no existe, deseas crear uno nuevo?',
+        type: 'error'
+      });
+      this.nombre_laboratorio='';
+      this.stock=0;
+      this.precioventa=0;
+      this.nombre_producto='';
+    }
+    else
+    {
+      swal({
+        title: 'Error',
+        text: 'Error de servidor, estado ' + error.message,
+        type: 'error'
+      });
+    }
+   }
+ )
+
+}
+
+
 }
 
