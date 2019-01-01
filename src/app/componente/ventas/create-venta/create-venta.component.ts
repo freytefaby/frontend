@@ -233,8 +233,9 @@ detalle(detalle:NgForm)
       this.impuesto=0;
       this.comision=0;
       this.preciocompra=0;
-
-      detalle.reset();
+      this.cantidad=0;
+      this.unidad=0;
+      //detalle.reset();
       // console.log("cantidad: "+this.total_cantidad);
       // console.log("Valor: "+this.precio);
       // console.log("Valor de impuesto: "+this.iva);
