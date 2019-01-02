@@ -345,13 +345,33 @@ realizar_venta(venta:NgForm)
         },
         error=>
         {
-      
+          this.contador=0;
+          var cadenaerror='';
+          for (var _i = 0; _i < error.error.producto.length; _i++) {
+           cadenaerror+=error.error.producto[_i]['producto']+'<br> Stock:'+' '+error.error.producto[_i]['stock']+'<hr>';
+            }
+          console.log(cadenaerror);
           console.log(error);
-          swal({
-            title:'Error',
-            text: 'No se pudo procesar la solicitud, consulte con el administrador',
-            type: 'error'
-          });
+           if(error.status===409)
+           {
+            swal({
+              title:'Error',
+              html: 'La cantidad que escogiste son mayores a los stocks de estos productos, transaccion rechazada hasta que cambies el valor de las cantidades o elimines el prodcuto<hr>'
+              +cadenaerror,
+              type: 'error'
+            });
+
+           }
+           else
+            {
+              swal({
+                title:'Error',
+                text: 'No se pudo procesar la solicitud, consulte con el administrador',
+                type: 'error'
+              });
+            }
+         
+         
         })
 
      }
