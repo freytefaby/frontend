@@ -7,6 +7,7 @@ import {NgForm} from '@angular/forms';
 
 
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -29,7 +30,8 @@ onSubmit(forma:NgForm){
 
 
   ngOnInit() {
-    
+   
+  
 
   }
 

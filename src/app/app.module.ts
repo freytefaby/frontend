@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 //rutas
 
@@ -49,7 +50,8 @@ import { CreateVentaComponent } from './componente/ventas/create-venta/create-ve
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    NgxSpinnerModule
    
   ],
   providers: [appRoutingProviders, LoginService, IpService, CategoriaService],

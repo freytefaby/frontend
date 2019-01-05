@@ -340,6 +340,7 @@ realizar_venta(venta:NgForm)
             html: cadena,
             type: 'success'
           });
+          
           this.router.navigate(['/ventas']);
       
         },

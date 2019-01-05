@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { compileNgModule } from '@angular/core/src/render3/jit/module';
 import swal from 'sweetalert2';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class LoginService {
   val:number=0;
   data:string='';
   
-  constructor(public _ip: IpService, private _http : HttpClient,  public router: Router) { 
+  constructor(public _ip: IpService, private _http : HttpClient,  public router: Router, private spinner: NgxSpinnerService) { 
       
   }
 
@@ -25,7 +26,9 @@ export class LoginService {
     {username, password}, { headers: this._ip.headers_post }
   )
     .subscribe(
+      
       data => {
+        
         if(this.val>0)
         {
           swal({
@@ -39,7 +42,14 @@ export class LoginService {
           console.log(data);
           this.token = data['access_token'];
           localStorage.setItem('token', this.token);
-          this.router.navigate(['/ventas']);
+          this.spinner.show();
+          setTimeout(() => {
+        /** spinner ends after 5 seconds */
+        this.spinner.hide();
+        this.router.navigate(['/ventas']);
+
+             }, 5000);
+          
         }
        
         this.val=this.val+1;
