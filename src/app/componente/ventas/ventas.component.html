@@ -1,4 +1,10 @@
+<ngx-spinner
+bdColor = "rgba(9,56,159,0.8)"
+size = "large"
+color = "#fff"
+type = "ball-clip-rotate-multiple"
 
+><p style="font-size: 20px; color: white">Loading...</p></ngx-spinner>
   <app-cabecera></app-cabecera>
 
   <div class="app-body">
@@ -17,23 +23,27 @@
               <div class="card">
                   <div class="card-header">
                       <i class="fa fa-align-justify"></i> Ventas
-                      <button type="button" class="btn btn-secondary"  [routerLink]="['/ventas/create']">
+                      <button type="button" class="btn btn-secondary" [routerLink]="['/ventas/create']">
                           <i class="icon-plus"></i>&nbsp;Nuevo
                       </button>
                   </div>
                   <div class="card-body">
+                   <form #FormSearch="ngForm" (ngSubmit)="busqueda(FormSearch)" >
                       <div class="form-group row">
                           <div class="col-md-6">
                               <div class="input-group">
-                                  <select class="form-control col-md-3" id="opcion" name="opcion">
-                                    <option value="nombre">Nombre</option>
-                                    <option value="descripcion">Descripción</option>
+                                  <select class="form-control col-md-3" id="criterio" [(ngModel)]="criterio" name="criterio">
+                                    <option value="nombrecliente">Nombre Cliente</option>
+                                    <option value="apellidocliente">Apellido Cliente</option>
+                                    <option value="cedulacliente">Cedula Cliente</option>
+                                    <option value="correocliente">Correo Cliente</option>
                                   </select>
-                                  <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
+                                  <input type="text" id="search" name="search" [(ngModel)]="search" class="form-control" placeholder="Texto a buscar">
                                   <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                               </div>
                           </div>
                       </div>
+                       </form>
                       <table class="table table-bordered table-striped table-sm">
                           <thead>
                               <tr>
@@ -53,8 +63,8 @@
                           <tbody>
                               <tr *ngFor="let ventas of venta | paginate: { itemsPerPage: itemsPagina, currentPage: p, totalItems: totalpages }">
                                   <td>
-                                      <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalNuevo">
-                                        <i class="icon-pencil"></i>
+                                      <button type="button" class="btn btn-info btn-sm" [routerLink]="['show/',ventas.idventa]">
+                                        <i class="icon-eye"></i>
                                       </button> &nbsp;
                                       <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminar">
                                         <i class="icon-trash"></i>

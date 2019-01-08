@@ -64,5 +64,9 @@ export class VentaService {
  {
   return this._http.get(this._ip.servidor()+'/buscarproducto?criterio='+criterio+"&buscar="+busqueda,{headers:this._ip.headers_get});
  }
+ showventa(id:number)
+ {
+  return this._http.get(this._ip.servidor()+'/ventashow/'+id,{headers:this._ip.headers_get});
+ }
 }
 

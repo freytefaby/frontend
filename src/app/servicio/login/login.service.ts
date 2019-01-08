@@ -20,7 +20,7 @@ export class LoginService {
   }
 
   public login(username:string, password:string){
-   
+   this.spinner.show();
   this._http.post(
     `${this._ip.servidor()}/login`,
     {username, password}, { headers: this._ip.headers_post }
@@ -28,7 +28,7 @@ export class LoginService {
     .subscribe(
       
       data => {
-        
+         this.spinner.hide();
         if(this.val>0)
         {
           swal({
@@ -42,13 +42,13 @@ export class LoginService {
           console.log(data);
           this.token = data['access_token'];
           localStorage.setItem('token', this.token);
-          this.spinner.show();
-          setTimeout(() => {
-        /** spinner ends after 5 seconds */
-        this.spinner.hide();
-        this.router.navigate(['/ventas']);
+          this.router.navigate(['/ventas']);
+        //   setTimeout(() => {
+        // /** spinner ends after 5 seconds */
+        // this.spinner.hide();
+        // this.router.navigate(['/ventas']);
 
-             }, 5000);
+        //      }, 5000);
           
         }
        
@@ -56,6 +56,7 @@ export class LoginService {
         console.log(this.val);
       },
           error => {
+             this.spinner.hide();
             console.log(error);
             if(error.error.length>0)
             {

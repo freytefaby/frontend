@@ -13,20 +13,20 @@ cont:number=0;
   ngOnInit() {
   }
 
- almacen()
+ ventas()
  {
   this.cont=this.cont+1;
    if(this.cont===1)
     {
      
-      $("#almacen").addClass('open');
+      $("#ventas").addClass('open');
     }
      else if(this.cont==2)
       {
         
          this.cont=0;
         
-         $("#almacen").removeClass('open');
+         $("#ventas").removeClass('open');
 
       }
     

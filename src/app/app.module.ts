@@ -27,6 +27,7 @@ import { CabeceraComponent } from './componente/cabecera/cabecera.component';
 import { MenuComponent } from './componente/menu/menu.component';
 import { CategoriaComponent } from './componente/categoria/categoria.component';
 import { CreateVentaComponent } from './componente/ventas/create-venta/create-venta.component';
+import { ShowComponent } from './componente/ventas/show/show.component';
 
 
 
@@ -39,6 +40,7 @@ import { CreateVentaComponent } from './componente/ventas/create-venta/create-ve
     MenuComponent,
     CategoriaComponent,
     CreateVentaComponent,
+    ShowComponent,
     
     
     

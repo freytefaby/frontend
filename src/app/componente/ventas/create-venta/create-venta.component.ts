@@ -7,6 +7,9 @@ import swal from 'sweetalert2';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Router } from '@angular/router';
 import { TouchSequence } from 'selenium-webdriver';
+import { NgxSpinnerService } from 'ngx-spinner';
+
+
 declare var $: any;
 @Component({
   selector: 'app-create-venta',
@@ -64,7 +67,7 @@ datoscliente:any;
 productosModal:any;
 
 
-  constructor(public _venta:VentaService,public router: Router) { }
+  constructor(public _venta:VentaService,public router: Router, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
     this.tipoventa();
@@ -73,9 +76,10 @@ productosModal:any;
 
   buscarcliente(search:NgForm)
   {
+     this.spinner.show();
     this._venta.buscarclientecc(search.value['cedula']).subscribe(
       data=>{
-
+           this.spinner.hide();
           console.log(data)
           this.nombre_cliente=data['nombrecliente']+' '+data['apellidocliente'];
           this.id_cliente=data['idcliente'];
@@ -84,6 +88,7 @@ productosModal:any;
       },
       error=>
       {
+           this.spinner.hide();
           console.log(error)
           this.nombre_cliente='No se encuentra'
       }
@@ -110,10 +115,11 @@ tipoventa()
 
 buscararticulocod(codigo:NgForm)
 {
-
+  this.spinner.show();
   console.log(codigo.value)
   this._venta.buscarproducto(codigo.value['codigo']).subscribe(
     data=>{
+      this.spinner.hide();
       console.log(data)
       this.nombre_producto=data['descripcionproducto'];
       this.nombre_laboratorio=data['nombreproveedor'];
@@ -129,6 +135,7 @@ buscararticulocod(codigo:NgForm)
 
 
     },error=>{
+      this.spinner.hide();
       console.log(error);
       if(error.status===400)
       {
@@ -158,19 +165,21 @@ buscararticulocod(codigo:NgForm)
 
 detalle(detalle:NgForm)
 {
-
+  this.spinner.show();
   if(detalle.value['cantidad']>0)
   {
+    this.spinner.hide();
     this.total_cantidad=detalle.value['unidad']*this.cantidadempaque+detalle.value['cantidad'];
   }
   else
     {
+      this.spinner.hide();
       this.total_cantidad=detalle.value['unidad']*this.cantidadempaque;
     }
   
   if(this.comprobar_repetido(this.idproducto))
   {
-
+    this.spinner.hide();
     swal({
       title: 'Error',
       text: 'Este producto ya se encuentra en el detalle',
@@ -179,6 +188,7 @@ detalle(detalle:NgForm)
   }
   else if(this.total_cantidad<1)
   {
+    this.spinner.hide();
     swal({
       title: 'Error',
       text: 'Los productos deben tener cantidades',
@@ -187,6 +197,7 @@ detalle(detalle:NgForm)
   }
   else if(this.stock < this.total_cantidad)
   {
+    this.spinner.hide();
     swal({
       title: 'Error',
       text: 'Este producto no posee stock para venta',
@@ -196,6 +207,7 @@ detalle(detalle:NgForm)
   }
   else if(this.nombre_producto==='')
     {
+      this.spinner.hide();
       swal({
         title: 'Error',
         text: 'Producto mal calculado',
@@ -206,6 +218,7 @@ detalle(detalle:NgForm)
     }
     else
     {
+      this.spinner.hide();
       this.valorcompra=this.total_cantidad*this.preciocompra/this.cantidadempaque;
       this.precio=this.total_cantidad*this.precioventa/this.cantidadempaque;
       this.iva=this.precio*this.impuesto/100;
@@ -278,10 +291,12 @@ comprobar_repetido(datos:number)
 
 realizar_venta(venta:NgForm)
 {
+  this.spinner.show();
   this.importe=venta.value['importe'];
   this.descuento=venta.value['descuento'];
    if(this.detalles.length<=0)
    {
+     this.spinner.hide();
     swal({
       title: 'Error',
       text: 'No hay productos en la venta!!',
@@ -290,6 +305,7 @@ realizar_venta(venta:NgForm)
    }
    else if(this.importe <=0 )
    {
+     this.spinner.hide();
     swal({
       title: 'Error',
       text: 'Error de calculo!!',
@@ -298,6 +314,7 @@ realizar_venta(venta:NgForm)
    }
    else if(this.importe < this.netoV )
    {
+     this.spinner.hide();
     swal({
       title:'Error',
       text: 'El importe debe ser mayor a la venta al menos que estes cubriendo un descuento',
@@ -308,6 +325,7 @@ realizar_venta(venta:NgForm)
    }
    else if(this.id_cliente===0)
    {
+     this.spinner.hide();
     swal({
       title:'Error',
       text: 'Debes escoger un cliente valido',
@@ -317,6 +335,7 @@ realizar_venta(venta:NgForm)
    }
    else if(this.tipov===0)
    {
+     this.spinner.hide();
     swal({
       title:'Error',
       text: 'Debes escoger el tipo de venta',
@@ -332,6 +351,7 @@ realizar_venta(venta:NgForm)
       this._venta.crear(this.detalles,this.netoV,this.id_cliente,this.totalV,this.comisionesV,this.utilidadesV,this.importe,this.tipov,this.descuento).subscribe(
         data=>
         {
+          this.spinner.hide();
           console.log(data);
           var res=this.importe-this.netoV;
           var cadena='<h3>Dato registrado exitosamente</h3><h4>No.factura: '+data['factura']+'<br>Cambio: COP'+' '+res+'</h4>';
@@ -346,6 +366,7 @@ realizar_venta(venta:NgForm)
         },
         error=>
         {
+          this.spinner.hide();
           this.contador=0;
           var cadenaerror='';
           for (var _i = 0; _i < error.error.producto.length; _i++) {
@@ -395,15 +416,17 @@ realizar_venta(venta:NgForm)
 
 busquedacliente(cliente:NgForm)
 {
+     this.spinner.show();
     console.log(cliente.value);
     this._venta.buscarcliente(cliente.value['selectecliente'],cliente.value['namecliente']).subscribe(
      data=>{
-    
+      this.spinner.hide();
       this.datoscliente=data['data'];
       console.log(this.datoscliente);
      
 
      },error=>{
+        this.spinner.hide();
       console.log(error);
 
      }
@@ -412,9 +435,10 @@ busquedacliente(cliente:NgForm)
 }
 buscarclientemodal(id:number)
 {
+  this.spinner.show();
   this._venta.buscarclientecc(id).subscribe(
     data=>{
-
+        this.spinner.hide();
         console.log(data)
         this.nombre_cliente=data['nombrecliente']+' '+data['apellidocliente'];
         this.id_cliente=data['idcliente'];
@@ -424,7 +448,8 @@ buscarclientemodal(id:number)
 
     },
     error=>
-    {
+    {   
+        this.spinner.hide();
         console.log(error)
         this.nombre_cliente='No se encuentra'
     }
@@ -433,6 +458,7 @@ buscarclientemodal(id:number)
 }
 agregar_cliente(cliente:NgForm)
 {
+ this.spinner.show();
  var contC=0;
  var datos='';
 contC=contC+1;
@@ -443,7 +469,7 @@ if(contC===1)
     {
       this._venta.buscarclientecc(data['idcliente']).subscribe(
         data2=>{
-  
+             this.spinner.hide();
             console.log(data)
             this.nombre_cliente=data2['nombrecliente']+' '+data2['apellidocliente'];
             this.id_cliente=data['idcliente'];
@@ -452,6 +478,7 @@ if(contC===1)
         },
         error2=>
         {
+            this.spinner.hide();
             console.log(error2);
             this.nombre_cliente='No se encuentra';
         }
@@ -469,6 +496,7 @@ if(contC===1)
   
   },
   error=>{
+     this.spinner.hide();
     console.log(error);
     if(error.error.length>0)
     {
@@ -508,15 +536,17 @@ else
 
 buscarproductomodal(datos:NgForm)
 {
+  this.spinner.show();
  console.log(datos.value);
  this._venta.buscarproductomodal(datos.value['selecteproducto'],datos.value['nameproducto']).subscribe(
    data=>{
-       
+           this.spinner.hide();
           this.productosModal=data['data'];
           console.log(this.productosModal);
    },
    error=>
    {
+      this.spinner.hide(); 
       console.log(error);
    }
  )
@@ -526,9 +556,10 @@ buscarproductomodal(datos:NgForm)
 
 buscarproductocodmod(data:any)
 {
-
+ this.spinner.show();
  this._venta.buscarproducto(data).subscribe(
    data=>{
+        this.spinner.hide();
         console.log(data);
         this.nombre_producto=data['descripcionproducto'];
       this.nombre_laboratorio=data['nombreproveedor'];
@@ -543,7 +574,7 @@ buscarproductocodmod(data:any)
       $('#buscarProductoModal').modal('hide');
    },
    error=>{
-
+    this.spinner.hide();
     console.log(error);
     if(error.status===400)
     {
