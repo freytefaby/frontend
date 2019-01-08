@@ -74,6 +74,12 @@ busqueda(busqueda:NgForm)
    this.getVentas(this.page);
  }
 
+ pdf(data:number)
+ {
+  window.open('http://localhost/backend/public/api/pdf_ventas/'+data, '_blank');
+
+ }
+
 
 
 

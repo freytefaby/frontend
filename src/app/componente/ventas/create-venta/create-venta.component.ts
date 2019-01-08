@@ -75,26 +75,27 @@ productosModal:any;
   }
 
   buscarcliente(search:NgForm)
-  {
-     this.spinner.show();
-    this._venta.buscarclientecc(search.value['cedula']).subscribe(
-      data=>{
-           this.spinner.hide();
-          console.log(data)
-          this.nombre_cliente=data['nombrecliente']+' '+data['apellidocliente'];
-          this.id_cliente=data['idcliente'];
-         
+     { 
+        this.spinner.show();
+        this._venta.buscarclientecc(search.value['cedula']).subscribe(
+          data=>{
+              this.spinner.hide();
+              console.log(data)
+              this.nombre_cliente=data['nombrecliente']+' '+data['apellidocliente'];
+              this.id_cliente=data['idcliente'];
+            
 
-      },
-      error=>
-      {
-           this.spinner.hide();
-          console.log(error)
-          this.nombre_cliente='No se encuentra'
-      }
+          },
+          error=>
+          {
+              this.spinner.hide();
+              console.log(error)
+              this.nombre_cliente='No se encuentra'
+          }
 
-    );
-  }
+        );
+      
+    }
 
   
 tipoventa()
@@ -108,6 +109,15 @@ tipoventa()
     },
     error=>
     {
+      if(error['error']['error']===1)
+      {
+        swal({
+          title: 'Error!!',
+          text: 'No tienes permiso para acceder a este recurso!!',
+          type: 'warning'
+        });
+        this.router.navigate(['/error']);
+      }
       console.log(error)
     });
 
@@ -366,14 +376,13 @@ realizar_venta(venta:NgForm)
         },
         error=>
         {
+          console.log(error);
           this.spinner.hide();
           this.contador=0;
           var cadenaerror='';
           for (var _i = 0; _i < error.error.producto.length; _i++) {
            cadenaerror+=error.error.producto[_i]['producto']+'<br> Stock:'+' '+error.error.producto[_i]['stock']+'<hr>';
             }
-          console.log(cadenaerror);
-          console.log(error);
            if(error.status===409)
            {
             swal({
@@ -506,7 +515,17 @@ if(contC===1)
         }
         else
         {
+          if(error['error']['error']===1)
+      {
+        datos="No tienes permiso para agregar clientes";
+      
+      }
+      else
+        {
           datos=error.error.message+'<br>'+error.statusText;
+        }
+          
+          
         }
 swal({
 title: 'Error',
@@ -600,6 +619,8 @@ buscarproductocodmod(data:any)
  )
 
 }
+
+
 
 
 }
