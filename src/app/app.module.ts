@@ -28,6 +28,8 @@ import { MenuComponent } from './componente/menu/menu.component';
 import { CategoriaComponent } from './componente/categoria/categoria.component';
 import { CreateVentaComponent } from './componente/ventas/create-venta/create-venta.component';
 import { ShowComponent } from './componente/ventas/show/show.component';
+import { ComprasComponent } from './componente/compras/compras.component';
+
 
 
 
@@ -41,6 +43,8 @@ import { ShowComponent } from './componente/ventas/show/show.component';
     CategoriaComponent,
     CreateVentaComponent,
     ShowComponent,
+    ComprasComponent,
+   
     
     
     
